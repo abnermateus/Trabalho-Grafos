@@ -4,11 +4,8 @@
     {
         private static int _id = 1;
         public int Id { get; set; }
-
         public int Grau { get; private set; }
-
         public BuscaProfundidade? BuscaProfundidade { get; set; }
-
         public CaminhoMinimo? CaminhoMinimo { get; set; }
 
         public Vertice()
@@ -34,30 +31,29 @@
         }
     }
 
-
     public class BuscaProfundidade
     {
-        public int DiscoveryTime { get; set; }
-        public int FinishTime { get; set; }
-        public Vertice? Father { get; set; }
+        public int TempoDescoberta { get; set; }
+        public int TempoTermino { get; set; }
+        public Vertice? Pai { get; set; }
 
         public BuscaProfundidade()
         {
-            DiscoveryTime = 0;
-            FinishTime = 0;
-            Father = null;
+            TempoDescoberta = 0;
+            TempoTermino = 0;
+            Pai = null;
         }
     }
 
     public class CaminhoMinimo
     {
-        public decimal Distance { get; set; }
-        public Vertice? Father { get; set; }
+        public decimal Distancia { get; set; }
+        public Vertice? Pai { get; set; }
 
         public CaminhoMinimo()
         {
-            Distance = int.MaxValue;
-            Father = null;
+            Distancia = int.MaxValue;
+            Pai = null;
         }
     }
 }

@@ -14,7 +14,7 @@
         public Vertice Origem { get; set; }
         public Vertice Destino { get; set; }
         public int Peso { get; set; }
-        public ClassificacaoAresta classificacaoAresta { get; set; }
+        public ClassificacaoAresta Tipo { get; set; }
 
         public Aresta(Vertice origem, Vertice destino, int peso)
         {

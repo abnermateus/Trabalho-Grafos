@@ -6,9 +6,7 @@ namespace Grafos.Classes.MatrizAdjacencia
     public class GrafoMA : IGrafo
     {
         public int[,]? MatrizDeAdjacencia { get; set; }
-
         public List<Aresta>? Arestas { get; set; }
-
         public List<Vertice>? Vertices { get; set; }
 
         public GrafoMA()
@@ -39,6 +37,7 @@ namespace Grafos.Classes.MatrizAdjacencia
 
             return this;
         }
+
         public void Representacao()
         {
             if (Vertices == null || Arestas == null)
