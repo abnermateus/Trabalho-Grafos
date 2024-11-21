@@ -11,6 +11,8 @@
 
     public class Aresta
     {
+        private int _id = 1;
+        public int Id { get; set; }
         public Vertice Origem { get; set; }
         public Vertice Destino { get; set; }
         public int Peso { get; set; }
@@ -21,6 +23,8 @@
             Origem = origem;
             Destino = destino;
             Peso = peso;
+            Id = _id;
+            _id++;
         }
     }
 }

@@ -2,7 +2,7 @@
 using Grafos.Interfaces;
 using Grafos.Models;
 
-namespace Grafos
+namespace Grafos.Menus
 {
     public class Menu
     {
