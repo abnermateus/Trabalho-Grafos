@@ -26,6 +26,9 @@ namespace Grafos.Classes.MatrizAdjacencia
         {
             Vertices = vertices;
             Arestas = arestas;
+
+            // Matriz é criada com tamanho + 1 para permitir uso direto dos IDs como índices
+            // Índice 0 não é utilizado, simplificando o acesso à matriz
             var matriz = new int[vertices.Count + 1, vertices.Count + 1];
 
             foreach (var aresta in arestas)

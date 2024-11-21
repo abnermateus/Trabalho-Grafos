@@ -15,9 +15,10 @@
             _id++;
         }
 
-        public void IncrementaGrau()
+        public Vertice IncrementaGrau()
         {
             Grau++;
+            return this;
         }
 
         public void ResetBuscaEmProfundidade()
