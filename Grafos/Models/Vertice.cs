@@ -15,14 +15,45 @@
             _id++;
         }
 
-        public void IncrementaGrau()
+        public Vertice IncrementaGrau()
         {
             Grau++;
+            return this;
         }
 
         public void ResetBuscaEmProfundidade()
         {
             BuscaProfundidade = new BuscaProfundidade();
+        }
+
+        public int ObterTempoDescoberta()
+        {
+            return BuscaProfundidade.TempoDescoberta;
+        }
+
+        public void DefinirTempoDescoberta(int tempo)
+        {
+            BuscaProfundidade.TempoDescoberta = tempo;
+        }
+
+        public int ObterTempoTermino()
+        {
+            return BuscaProfundidade.TempoTermino;
+        }
+
+        public void DefinirTempoTermino(int tempo)
+        {
+            BuscaProfundidade.TempoTermino = tempo;
+        }
+
+        public Vertice? ObterPai()
+        {
+            return BuscaProfundidade.Pai;
+        }
+
+        public void DefinirPai(Vertice pai)
+        {
+            BuscaProfundidade.Pai = pai;
         }
 
         public void ResetCaminhoMinimo()

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DimacsReader\" />
+    <PackageReference Include="prometheus-net" Version="8.2.1" />
   </ItemGroup>
 
 </Project>

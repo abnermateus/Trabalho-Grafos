@@ -1,6 +1,7 @@
 ﻿using Grafos.Classes.MatrizAdjacencia;
 using Grafos.Interfaces;
 using Grafos.Models;
+using static Grafos.Utils.Utls;
 
 namespace Grafos.Menus
 {
@@ -141,11 +142,6 @@ namespace Grafos.Menus
             {
                 Console.WriteLine("\nO grafo atual não é uma matriz de adjacência!");
             }
-        }
-
-        private double CalcularDensidade(int numVertices, int numArestas)
-        {
-            return numVertices <= 1 ? 0 : (double)numArestas / (numVertices * (numVertices - 1));
         }
     }
 }
