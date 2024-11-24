@@ -6,7 +6,10 @@
         ArestaArvore,
         ArestaDeRetorno,
         ArestaDeAvanco,
-        ArestaDeCruzamento
+        ArestaDeCruzamento,
+        ArestaTio,
+        ArestaPrimo,
+        ArestaIrmao
     }
 
     public class Aresta

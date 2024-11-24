@@ -7,7 +7,6 @@ namespace Grafos.LeitorDimac
 {
     public class DimacReader
     {
-
         public static IGrafo LerArquivo(string path)
         {
             var vertices = new List<Vertice>();
