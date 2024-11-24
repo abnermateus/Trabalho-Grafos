@@ -21,6 +21,8 @@
             return this;
         }
 
+        #region Busca em Profundidade
+
         public void ResetBuscaEmProfundidade()
         {
             BuscaProfundidade = new BuscaProfundidade();
@@ -56,10 +58,36 @@
             BuscaProfundidade.Pai = pai;
         }
 
+        #endregion Busca em Profundidade
+
+        #region Caminho Mínimo
+
         public void ResetCaminhoMinimo()
         {
             CaminhoMinimo = new CaminhoMinimo();
         }
+
+        public decimal ObterDistanciaCM()
+        {
+            return CaminhoMinimo.Distancia;
+        }
+
+        public void DefinirDistanciaCM(decimal distancia)
+        {
+            CaminhoMinimo.Distancia = distancia;
+        }
+
+        public Vertice? ObterPaiCM()
+        {
+            return CaminhoMinimo.Pai;
+        }
+
+        public Vertice DefinirPaiCM(Vertice pai)
+        {
+            CaminhoMinimo.Pai = pai;
+            return this;
+        }
+        #endregion Caminho Mínimo
     }
 
     public class BuscaProfundidade

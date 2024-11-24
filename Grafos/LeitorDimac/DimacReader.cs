@@ -30,11 +30,11 @@ namespace Grafos.LeitorDimac
 
             if (densidade < 0.5)
             {
-                return new GrafoMA().InicializaGrafo(vertices, arestas); //Colocar a lista de adjacência aqui!!!
+                return new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas); //Colocar a lista de adjacência aqui!!!
             }
             else
             {
-                return new GrafoMA().InicializaGrafo(vertices, arestas);
+                return new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas);
             }
         }
 
