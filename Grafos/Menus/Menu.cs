@@ -1,4 +1,5 @@
 ﻿using Grafos.Classes.MatrizAdjacencia;
+using Grafos.Classes.ListaAdjacencia;
 using Grafos.Interfaces;
 using Grafos.Models;
 using static Grafos.Utils.Utls;
@@ -17,7 +18,7 @@ namespace Grafos.Menus
                 Console.Clear();
                 Console.WriteLine("=== Menu Principal ===");
                 Console.WriteLine("1 - Criar novo grafo");
-                Console.WriteLine("2 - Representar matriz de adjacência");
+                Console.WriteLine("2 - Exibir representação do grafo");
                 Console.WriteLine("0 - Sair");
                 Console.Write("\nEscolha uma opção: ");
 
@@ -29,7 +30,7 @@ namespace Grafos.Menus
                             CriarGrafo();
                             break;
                         case 2:
-                            RepresentarMatriz();
+                            RepresentarGrafo();
                             break;
                         case 0:
                             Console.WriteLine("Saindo...");
@@ -74,8 +75,7 @@ namespace Grafos.Menus
                 else
                 {
                     Console.WriteLine("Usando Lista de Adjacência (densidade <= 0.5)");
-                    // Implementar classe de Lista de Adjacência
-                    _grafo = new GrafoMatrizAdjacencia(); // Temporariamente usando MA
+                    _grafo = new GrafoListaAdjacencia();
                 }
 
                 // Criar vértices
@@ -117,7 +117,7 @@ namespace Grafos.Menus
                     }
                 }
 
-                _grafo.InicializaGrafo(vertices, arestas);
+                _grafo.InicializarGrafo(vertices, arestas);
                 Console.WriteLine("\nGrafo criado com sucesso!");
             }
             catch (Exception ex)
@@ -126,22 +126,16 @@ namespace Grafos.Menus
             }
         }
 
-        private void RepresentarMatriz()
+        private void RepresentarGrafo()
         {
             if (_grafo == null)
             {
-                Console.WriteLine("\nNenhum grafo foi criado ainda!");
+                Console.WriteLine("\nGrafo não foi criado ainda!");
                 return;
             }
 
-            if (_grafo is GrafoMatrizAdjacencia grafoMA)
-            {
-                grafoMA.Representacao();
-            }
-            else
-            {
-                Console.WriteLine("\nO grafo atual não é uma matriz de adjacência!");
-            }
+            Console.WriteLine("\n=== Representação do Grafo ===");
+            _grafo.ExibirRepresentacao();
         }
     }
 }

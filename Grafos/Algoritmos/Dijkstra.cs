@@ -5,7 +5,7 @@ namespace Grafos.Algoritmos
 {
     public class HelperDijkstra
     {
-        public Aresta Aresta { get; set; }
+        public Aresta? Aresta { get; set; }
         public decimal Distancia { get; set; }
     }
 
@@ -25,14 +25,14 @@ namespace Grafos.Algoritmos
 
             verticeDeInicio.DefinirDistanciaCM(0);
 
-            while (verticesSelecionados.Count < vertices.Count())
+            while (verticesSelecionados.Count < vertices.Count)
             {
                 var arestasPossiveis = new List<HelperDijkstra>();
 
                 // Primeiro: coletar todas as arestas possíveis
                 foreach (var vertice in verticesSelecionados)
                 {
-                    foreach (var aresta in Grafo.ArestasAdjacentes(vertice.Id))
+                    foreach (var aresta in Grafo.ObterArestasAdjacentes(vertice.Id))
                     {
                         // Se destino está fora do conjunto de S
                         if (aresta.Origem != null && !verticesSelecionados.Contains(aresta.Destino))

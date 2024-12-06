@@ -9,7 +9,7 @@ namespace Grafos
         {
             var grafo = LeitorDimac.DimacReader.LerArquivo("C:\\Users\\igorl\\OneDrive\\Documentos\\Projetos\\Trabalho_Grafos_3Semestre\\Grafos\\testeDimac.txt");
 
-            grafo.Representacao();
+            grafo.ExibirRepresentacao();
 
             var teste = grafo.ExecutarBuscaEmProfundidade(1); //Ver se tem loop
 

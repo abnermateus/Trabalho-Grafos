@@ -29,11 +29,11 @@ namespace Grafos.LeitorDimac
 
             if (densidade < 0.5)
             {
-                return new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas); //Colocar a lista de adjacência aqui!!!
+                return new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas); //Colocar a lista de adjacência aqui!!!
             }
             else
             {
-                return new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas);
+                return new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Grafos.LeitorDimac
             var valores = linha.Split(' ');
 
             if (valores.Length != 2)
-                throw new Exception("Tem coisa errada aê");
+                throw new InvalidOperationException("Formato da linha está incorreto");
 
             var qtdVertices = int.Parse(valores[0]);
             var qtdArestas = int.Parse(valores[1]);
@@ -59,7 +59,7 @@ namespace Grafos.LeitorDimac
             string[] partes = linha.Split(' ');
 
             if (partes.Length != 3)
-                throw new Exception("Erro ao ler cabeçalho do arquivo.");
+                throw new ArgumentException("Erro ao ler cabeçalho do arquivo.");
 
             var origem = int.Parse(partes[0]);
 
@@ -70,12 +70,12 @@ namespace Grafos.LeitorDimac
             var verticesDaAresta = vertices.Where(v => v.Id == origem || v.Id == destino).ToList();
 
             if (verticesDaAresta.Count != 2)
-                throw new Exception("Erro ao encontrar vértices da aresta."); //Passou um vértice que não existe jumento
+                throw new InvalidOperationException("Erro ao encontrar vértices da aresta."); //Passou um vértice que não existe jumento
 
             var aresta = arestas.FirstOrDefault(a => a.Origem == null && a.Destino == null);
 
             if (aresta == null)
-                throw new Exception("Erro ao encontrar aresta."); //Por acaso, passou mais arestas do que o esperado?
+                throw new InvalidOperationException("Erro ao encontrar aresta."); //Por acaso, passou mais arestas do que o esperado?
 
             aresta.Origem = verticesDaAresta.FirstOrDefault(v => v.Id == origem);
             aresta.Destino = verticesDaAresta.FirstOrDefault(v => v.Id == destino).IncrementaGrau();

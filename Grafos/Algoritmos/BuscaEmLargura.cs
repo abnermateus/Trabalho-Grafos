@@ -7,8 +7,8 @@ namespace Grafos.Algoritmos
     public static class BuscaEmLargura
     {
         private static int Indice = 0;
+        private static IGrafo? Grafo;
 
-        private static IGrafo Grafo;
         public static IGrafo ExecutarBuscaEmLargura(this IGrafo GrafoEntrada, int IdVertice)
         {
             Indice = 0;
@@ -21,7 +21,7 @@ namespace Grafos.Algoritmos
 
             vertices.ForEach(x => x.ResetBuscaEmLargura());
 
-            verticeDeInicio.DefinirIndiceBuscaEmLargura(1);
+            verticeDeInicio?.DefinirIndiceBuscaEmLargura(1);
 
             while (vertices.Any(v => v.ObterNivelBuscaEmLargura() == 0))
             {
@@ -32,14 +32,15 @@ namespace Grafos.Algoritmos
 
         private static void Busque(Vertice vertice, Queue<Vertice> fila)
         {
-            Indice = Indice + 1;
+            Indice++;
             vertice.DefinirNivelBuscaEmLargura(Indice);
             fila.Enqueue(vertice);
 
             while (fila.Count > 0)
             {
                 var verticeAtual = fila.Dequeue();
-                foreach (var aresta in Grafo.ArestasAdjacentes(verticeAtual.Id))
+
+                foreach (var aresta in Grafo.ObterArestasAdjacentes(verticeAtual.Id))
                 {
                     var vizinho = aresta.Destino;
 
@@ -49,23 +50,23 @@ namespace Grafos.Algoritmos
                         vizinho.DefinirPaiBuscaEmLargura(verticeAtual);
                         vizinho.DefinirNivelBuscaEmLargura(verticeAtual.ObterNivelBuscaEmLargura() + 1);
 
-                        Indice = Indice + 1;
+                        Indice++;
                         vizinho.DefinirIndiceBuscaEmLargura(Indice);
                         fila.Enqueue(vizinho);
                     }
-                    else if (vizinho.ObterNivelBuscaEmLargura() == verticeAtual.ObterNivelBuscaEmLargura() + 1)
+                    else if (vizinho?.ObterNivelBuscaEmLargura() == verticeAtual?.ObterNivelBuscaEmLargura() + 1)
                     {
                         aresta.Tipo = ClassificacaoAresta.ArestaTio;
                     }
-                    else if (vizinho.ObterNivelBuscaEmLargura() == verticeAtual.ObterNivelBuscaEmLargura()
-                        && verticeAtual.ObterPaiBuscaEmLargura().Id == vizinho.ObterPaiBuscaEmLargura().Id
-                        && vizinho.ObterIndiceBuscaEmLargura() > verticeAtual.ObterIndiceBuscaEmLargura())
+                    else if (vizinho?.ObterNivelBuscaEmLargura() == verticeAtual?.ObterNivelBuscaEmLargura()
+                        && verticeAtual?.ObterPaiBuscaEmLargura().Id == vizinho?.ObterPaiBuscaEmLargura().Id
+                        && vizinho?.ObterIndiceBuscaEmLargura() > verticeAtual?.ObterIndiceBuscaEmLargura())
                     {
                         aresta.Tipo = ClassificacaoAresta.ArestaIrmao;
                     }
-                    else if (vizinho.ObterNivelBuscaEmLargura() == verticeAtual.ObterNivelBuscaEmLargura()
-                        && verticeAtual.ObterPaiBuscaEmLargura().Id != vizinho.ObterPaiBuscaEmLargura().Id
-                        && vizinho.ObterIndiceBuscaEmLargura() > verticeAtual.ObterIndiceBuscaEmLargura())
+                    else if (vizinho?.ObterNivelBuscaEmLargura() == verticeAtual?.ObterNivelBuscaEmLargura()
+                        && verticeAtual?.ObterPaiBuscaEmLargura().Id != vizinho?.ObterPaiBuscaEmLargura().Id
+                        && vizinho?.ObterIndiceBuscaEmLargura() > verticeAtual?.ObterIndiceBuscaEmLargura())
                     {
                         aresta.Tipo = ClassificacaoAresta.ArestaPrimo;
                     }
@@ -77,9 +78,9 @@ namespace Grafos.Algoritmos
         {
             var vertices = grafo.ObterTodosVertices();
 
-            if (vertices == null || !vertices.Any())
+            if (vertices == null || vertices.Count == 0)
             {
-                throw new Exception("Grafo não possui vértices.");
+                throw new InvalidOperationException("Grafo não possui vértices.");
             }
 
             var sb = new StringBuilder();
@@ -100,9 +101,9 @@ namespace Grafos.Algoritmos
         {
             var vertices = grafo.ObterTodosVertices();
 
-            if (vertices == null || !vertices.Any())
+            if (vertices == null || vertices.Count == 0)
             {
-                throw new Exception("Grafo não possui vértices.");
+                throw new InvalidOperationException("Grafo não possui vértices.");
             }
 
             // Filtra os vértices pelo nível
@@ -110,7 +111,7 @@ namespace Grafos.Algoritmos
 
             if (!verticesFiltrados.Any())
             {
-                throw new Exception($"Não foram encontrados vértices até o nível {nivelMaximo}.");
+                throw new InvalidOperationException($"Não foram encontrados vértices até o nível {nivelMaximo}.");
             }
 
             var sb = new StringBuilder();

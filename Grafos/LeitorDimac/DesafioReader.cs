@@ -8,8 +8,8 @@ namespace Grafos.LeitorDimac
     public class DesafioReader
     {
         private static int Nivel = 0;
-
         private static int Limite = 0;
+
         public static (IGrafo, int) LerArquivo(string path)
         {
             var vertices = new List<Vertice>();
@@ -37,13 +37,13 @@ namespace Grafos.LeitorDimac
             #region Verificações
 
             if (arestas.Count == 0)
-                throw new Exception("Não há arestas no grafo");
+                throw new InvalidOperationException("Não há arestas no grafo");
 
             if (arestas.Count < Limite)
-                throw new Exception("O grafo não possui arestas suficientes");
+                throw new InvalidOperationException("O grafo não possui arestas suficientes");
 
             if (arestas.Count > Limite)
-                throw new Exception("O grafo possui arestas demais");
+                throw new InvalidOperationException("O grafo possui arestas demais");
 
             #endregion
 
@@ -51,15 +51,13 @@ namespace Grafos.LeitorDimac
 
             if (densidade < 0.5)
             {
-                return (new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas), Nivel); //Colocar a lista de adjacência aqui!!!
+                return (new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas), Nivel); //Colocar a lista de adjacência aqui!!!
             }
             else
             {
-                return (new GrafoMatrizAdjacencia().InicializaGrafo(vertices, arestas), Nivel);
+                return (new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas), Nivel);
             }
         }
-
-
 
         private static void MarcarNomes(HashSet<string> listaDeNomes, string linha)
         {
@@ -76,8 +74,10 @@ namespace Grafos.LeitorDimac
         private static void DefinirLimiteNivel(string linha)
         {
             var valores = linha.Split(' ');
+
             if (valores.Length != 2)
-                throw new Exception("Tem coisa errada aê");
+                throw new InvalidOperationException("Formato da linha está incorreto");
+
             Limite = int.Parse(valores[0]);
             Nivel = int.Parse(valores[1]);
         }
@@ -85,9 +85,11 @@ namespace Grafos.LeitorDimac
         private static void PreencherArestas(List<Vertice> vertices, List<Aresta> arestas, string linha)
         {
             var valores = linha.Split(' ');
+
             var verticeOrigem = vertices.Find(v => v.Nome == valores[0]);
             var verticeDestino = vertices.Find(v => v.Nome == valores[1]);
             var peso = 1;
+
             arestas.Add(new Aresta(verticeOrigem, verticeDestino, peso));
         }
     }
