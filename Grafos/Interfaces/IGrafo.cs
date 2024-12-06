@@ -5,7 +5,7 @@ namespace Grafos.Interfaces
 {
     public interface IGrafo
     {
-        GrafoMA InicializaGrafo(List<Vertice> vertices, List<Aresta> arestas);
+        GrafoMatrizAdjacencia InicializaGrafo(List<Vertice> vertices, List<Aresta> arestas);
         void Representacao();
 
         Vertice ObterVertice(int id);

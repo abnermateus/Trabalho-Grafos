@@ -9,7 +9,7 @@ namespace Grafos.Algoritmos
         private static IGrafo Grafo;
         private static bool EhDirecionado = true;
 
-        public static bool Busca(this IGrafo GrafoAtual, int IdVertice)
+        public static bool ExecutarBuscaEmProfundidade(this IGrafo GrafoAtual, int IdVertice)
         {
             Tempo = 0;
             Grafo = GrafoAtual;

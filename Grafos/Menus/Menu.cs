@@ -69,13 +69,13 @@ namespace Grafos.Menus
                 if (densidade > 0.5)
                 {
                     Console.WriteLine("Usando Matriz de Adjacência (densidade > 0.5)");
-                    _grafo = new GrafoMA();
+                    _grafo = new GrafoMatrizAdjacencia();
                 }
                 else
                 {
                     Console.WriteLine("Usando Lista de Adjacência (densidade <= 0.5)");
                     // Implementar classe de Lista de Adjacência
-                    _grafo = new GrafoMA(); // Temporariamente usando MA
+                    _grafo = new GrafoMatrizAdjacencia(); // Temporariamente usando MA
                 }
 
                 // Criar vértices
@@ -134,7 +134,7 @@ namespace Grafos.Menus
                 return;
             }
 
-            if (_grafo is GrafoMA grafoMA)
+            if (_grafo is GrafoMatrizAdjacencia grafoMA)
             {
                 grafoMA.Representacao();
             }

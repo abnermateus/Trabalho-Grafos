@@ -3,12 +3,15 @@ using Grafos.Models;
 
 namespace Grafos.Classes.MatrizAdjacencia
 {
-    public class GrafoMA : IGrafo
+    public partial class GrafoMatrizAdjacencia : IGrafo, IMatrizAdjacencia
     {
         public Aresta[,] MatrizDeAdjacencia { get; set; }
         public List<Vertice> Vertices { get; set; }
 
-        public GrafoMA(List<Aresta> arestas, List<Vertice> vertices)
+        public GrafoMatrizAdjacencia()
+        {
+        }
+        public GrafoMatrizAdjacencia(List<Aresta> arestas, List<Vertice> vertices)
         {
             Vertices = vertices;
             var matriz = new Aresta[vertices.Count + 1, vertices.Count + 1];
@@ -21,7 +24,7 @@ namespace Grafos.Classes.MatrizAdjacencia
             MatrizDeAdjacencia = matriz;
         }
         #region Métodos de consulta simples
-        public GrafoMA InicializaGrafo(List<Vertice> vertices, List<Aresta> arestas)
+        public GrafoMatrizAdjacencia InicializaGrafo(List<Vertice> vertices, List<Aresta> arestas)
         {
             Vertices = vertices;
 
@@ -303,4 +306,5 @@ namespace Grafos.Classes.MatrizAdjacencia
         }
     }
 }
+
 
