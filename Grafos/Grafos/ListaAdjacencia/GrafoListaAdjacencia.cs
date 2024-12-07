@@ -288,12 +288,9 @@ namespace Grafos.Classes.ListaAdjacencia
 
                 for (int j = 1; j < Vertices.Length; j++)
                 {
-                    if (Vertices[i] != null)
+                    if (Vertices[i] != null && Vertices[i].Any(v => v.Id == j))
                     {
-                        if (Vertices[i].Any(v => v.Id == j))
-                        {
-                            Console.Write(j + " -> ");
-                        }
+                        Console.Write(j + " -> ");
                     }
                 }
                 Console.OutputEncoding = System.Text.Encoding.UTF8;
