@@ -2,13 +2,13 @@
 using Grafos.Classes.ListaAdjacencia;
 using Grafos.Interfaces;
 using Grafos.Models;
-using static Grafos.Utils.Utls;
+using static Grafos.Utils.Utils;
 
 namespace Grafos.Menus
 {
     public class Menu
     {
-        private IGrafo? _grafo;
+        private IGrafo? grafo;
 
         public void ExecutarMenu()
         {
@@ -69,13 +69,13 @@ namespace Grafos.Menus
                 // Decide representação baseado na densidade
                 if (densidade > 0.5)
                 {
-                    Console.WriteLine("Usando Matriz de Adjacência (densidade > 0.5)");
-                    _grafo = new GrafoMatrizAdjacencia();
+                    Console.WriteLine("Usando Matriz de Adjacência (densidade > 0,5)");
+                    grafo = new GrafoMatrizAdjacencia();
                 }
                 else
                 {
-                    Console.WriteLine("Usando Lista de Adjacência (densidade <= 0.5)");
-                    _grafo = new GrafoListaAdjacencia();
+                    Console.WriteLine("Usando Lista de Adjacência (densidade <= 0,5)");
+                    grafo = new GrafoListaAdjacencia();
                 }
 
                 // Criar vértices
@@ -87,11 +87,11 @@ namespace Grafos.Menus
 
                 // Criar arestas
                 var arestas = new List<Aresta>();
-                Console.WriteLine("\nDigite as informações das arestas:");
+                Console.WriteLine("\nDigite as informações das arestas");
 
                 for (int i = 0; i < numArestas; i++)
                 {
-                    Console.WriteLine($"\nAresta {i + 1}:");
+                    Console.WriteLine($"\nAresta {i + 1}");
 
                     Console.Write("Vértice de origem (1 a {0}): ", numVertices);
                     int origem = int.Parse(Console.ReadLine() ?? "0");
@@ -117,7 +117,7 @@ namespace Grafos.Menus
                     }
                 }
 
-                _grafo.InicializarGrafo(vertices, arestas);
+                grafo.InicializarGrafo(vertices, arestas);
                 Console.WriteLine("\nGrafo criado com sucesso!");
             }
             catch (Exception ex)
@@ -128,14 +128,14 @@ namespace Grafos.Menus
 
         private void RepresentarGrafo()
         {
-            if (_grafo == null)
+            if (grafo == null)
             {
                 Console.WriteLine("\nGrafo não foi criado ainda!");
                 return;
             }
 
             Console.WriteLine("\n=== Representação do Grafo ===");
-            _grafo.ExibirRepresentacao();
+            grafo.ExibirRepresentacao();
         }
     }
 }

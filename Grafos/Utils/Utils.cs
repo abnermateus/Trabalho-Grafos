@@ -1,6 +1,6 @@
 ﻿namespace Grafos.Utils
 {
-    public class Utls
+    public static class Utils
     {
         public static double CalcularDensidade(int numVertices, int numArestas)
         {

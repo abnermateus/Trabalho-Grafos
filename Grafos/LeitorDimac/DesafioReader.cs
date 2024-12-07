@@ -1,7 +1,7 @@
 ﻿using Grafos.Classes.MatrizAdjacencia;
 using Grafos.Interfaces;
 using Grafos.Models;
-using static Grafos.Utils.Utls;
+using static Grafos.Utils.Utils;
 
 namespace Grafos.LeitorDimac
 {

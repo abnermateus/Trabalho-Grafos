@@ -5,9 +5,12 @@ namespace Grafos.Classes.MatrizAdjacencia
 {
     public partial class GrafoMatrizAdjacencia : IGrafo, IMatrizAdjacencia
     {
+        #region Propriedades
         public Aresta[,] MatrizDeAdjacencia { get; set; }
         public List<Vertice> Vertices { get; set; }
+        #endregion
 
+        #region Construtores
         public GrafoMatrizAdjacencia()
         {
         }
@@ -25,7 +28,6 @@ namespace Grafos.Classes.MatrizAdjacencia
             MatrizDeAdjacencia = matriz;
         }
 
-        #region Métodos de consulta simples
         public IGrafo InicializarGrafo(List<Vertice> vertices, List<Aresta> arestas)
         {
             Vertices = vertices;
@@ -43,6 +45,10 @@ namespace Grafos.Classes.MatrizAdjacencia
 
             return this;
         }
+        #endregion
+
+        #region Métodos de consulta simples
+
         /// <summary>
         /// Retorna um vértice a partir do seu ID.
         /// </summary>
@@ -102,8 +108,7 @@ namespace Grafos.Classes.MatrizAdjacencia
             }
             return arestas;
         }
-
-        #endregion Métodos de consulta
+        #endregion 
 
         #region Métodos de consulta complexos
 
@@ -172,7 +177,7 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <summary>
         /// Retorna as arestas adjacentes a um determinado vértice.
         /// As arestas adjacentes a um vértice são aquelas que SAEM do vértice de referência.
-        ///  É a vizinhança do vértice. //IMPORTANTE!!!!!!!!!!!!!!!!!
+        ///  É a vizinhança do vértice. 
         /// </summary>
         /// <param name="idVertice">ID do vértice de referência.</param>
         /// <returns>Uma lista de arestas adjacentes.</returns>
@@ -233,8 +238,7 @@ namespace Grafos.Classes.MatrizAdjacencia
         {
             return MatrizDeAdjacencia[idV1, idV2] != null;
         }
-
-        #endregion Métodos de consulta complexos
+        #endregion 
 
         #region Métodos de modificação
 
@@ -268,17 +272,16 @@ namespace Grafos.Classes.MatrizAdjacencia
             {
 
             }
-
         }
+        #endregion 
 
-        #endregion Métodos de modificação
-
+        #region Métodos de exibição
         public void ExibirRepresentacao()
         {
-            if (Vertices == null)
+            if (Vertices == null || MatrizDeAdjacencia == null)
                 throw new InvalidOperationException("Grafo não inicializado");
 
-            Console.WriteLine("\nMatriz de Adjacência:");
+            Console.WriteLine("\nMatriz de Adjacências:");
 
             Console.Write("   ");
             for (int i = 1; i <= Vertices.Count; i++)
@@ -319,6 +322,7 @@ namespace Grafos.Classes.MatrizAdjacencia
                 Console.WriteLine();
             }
         }
+        #endregion
     }
 }
 

@@ -1,7 +1,8 @@
-﻿using Grafos.Classes.MatrizAdjacencia;
+﻿using Grafos.Classes.ListaAdjacencia;
+using Grafos.Classes.MatrizAdjacencia;
 using Grafos.Interfaces;
 using Grafos.Models;
-using static Grafos.Utils.Utls;
+using static Grafos.Utils.Utils;
 
 namespace Grafos.LeitorDimac
 {
@@ -29,7 +30,7 @@ namespace Grafos.LeitorDimac
 
             if (densidade < 0.5)
             {
-                return new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas); //Colocar a lista de adjacência aqui!!!
+                return new GrafoListaAdjacencia().InicializarGrafo(vertices, arestas);
             }
             else
             {
@@ -78,7 +79,7 @@ namespace Grafos.LeitorDimac
                 throw new InvalidOperationException("Erro ao encontrar aresta."); //Por acaso, passou mais arestas do que o esperado?
 
             aresta.Origem = verticesDaAresta.FirstOrDefault(v => v.Id == origem);
-            aresta.Destino = verticesDaAresta.FirstOrDefault(v => v.Id == destino).IncrementaGrau();
+            aresta.Destino = verticesDaAresta.FirstOrDefault(v => v.Id == destino);
             aresta.Peso = peso;
         }
     }
