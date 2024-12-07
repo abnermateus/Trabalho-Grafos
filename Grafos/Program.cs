@@ -1,5 +1,6 @@
 ﻿using Grafos.Algoritmos;
 using Grafos.Interfaces;
+using Grafos.Menus;
 
 namespace Grafos
 {
@@ -7,25 +8,28 @@ namespace Grafos
     {
         public static void Main()
         {
-            var grafo = LeitorDimac.DimacReader.LerArquivo("C:\\Users\\igorl\\OneDrive\\Documentos\\Projetos\\Trabalho_Grafos_3Semestre\\Grafos\\testeDimac.txt");
+            // var grafo = LeitorDimac.DimacReader.LerArquivo("C:\\Users\\igorl\\OneDrive\\Documentos\\Projetos\\Trabalho_Grafos_3Semestre\\Grafos\\testeDimac.txt");
 
-            grafo.Representacao();
+            // grafo.ExibirRepresentacao();
 
-            var teste = grafo.ExecutarBuscaEmProfundidade(1); //Ver se tem loop
+            // var teste = grafo.ExecutarBuscaEmProfundidade(1); //Ver se tem loop
 
-            grafo.ExecutarDijkstra(1);
+            // grafo.ExecutarDijkstra(1);
 
-            grafo.ImprimirTabelaCaminhoMinimo();
+            // grafo.ImprimirTabelaCaminhoMinimo();
 
-            var teste2 = grafo as IMatrizAdjacencia;
+            // var teste2 = grafo as IMatrizAdjacencia;
 
-            teste2.GerarTabelaDistancias(teste2.ExecutarFloydWarshall());
+            // teste2.GerarTabelaDistancias(teste2.ExecutarFloydWarshall());
 
-            grafo.ExecutarBuscaEmLargura(1).GerarTabelaBuscaEmLargura();
+            // grafo.ExecutarBuscaEmLargura(1).GerarTabelaBuscaEmLargura();
 
-            var (GrafoDesafio, Nivel) = LeitorDimac.DesafioReader.LerArquivo("C:\\Users\\igorl\\OneDrive\\Documentos\\Projetos\\Trabalho_Grafos_3Semestre\\Grafos\\TesteDesafio.txt");
+            // var (GrafoDesafio, Nivel) = LeitorDimac.DesafioReader.LerArquivo("C:\\Users\\igorl\\OneDrive\\Documentos\\Projetos\\Trabalho_Grafos_3Semestre\\Grafos\\TesteDesafio.txt");
 
-            GrafoDesafio.ExecutarBuscaEmLargura(1).GerarTabelaBuscaEmLargura(3);
+            // GrafoDesafio.ExecutarBuscaEmLargura(1).GerarTabelaBuscaEmLargura(3);
+
+            Menu menu = new Menu();
+            menu.ExecutarMenu();
         }
     }
 }

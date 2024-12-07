@@ -5,23 +5,15 @@
         private static int _id = 1;
         public int Id { get; set; }
         public string? Nome { get; set; }
-        public int Grau { get; private set; }
         public BuscaProfundidade? BuscaProfundidade { get; set; }
         public CaminhoMinimo? CaminhoMinimo { get; set; }
-        public BuscaEmlargura? BuscaEmlargura { get; set; }
+        public BuscaLargura? BuscaLargura { get; set; }
 
         public Vertice(string name = "")
         {
             Id = _id;
             Nome = name;
-            Grau = 0;
             _id++;
-        }
-
-        public Vertice IncrementaGrau()
-        {
-            Grau++;
-            return this;
         }
 
         public static void ResetarId()
@@ -66,7 +58,45 @@
             BuscaProfundidade.Pai = pai;
         }
 
-        #endregion Busca em Profundidade
+        #endregion
+
+        #region Busca em Largura
+        public void ResetBuscaEmLargura()
+        {
+            BuscaLargura = new BuscaLargura();
+        }
+
+        public Vertice? ObterPaiBuscaEmLargura()
+        {
+            return BuscaLargura.Pai;
+        }
+
+        public void DefinirPaiBuscaEmLargura(Vertice pai)
+        {
+            BuscaLargura.Pai = pai;
+        }
+
+        public int ObterIndiceBuscaEmLargura()
+        {
+            return BuscaLargura.Indice;
+        }
+
+        public void DefinirIndiceBuscaEmLargura(int indice)
+        {
+            BuscaLargura.Indice = indice;
+        }
+
+        public int ObterNivelBuscaEmLargura()
+        {
+            return BuscaLargura.Nivel;
+        }
+
+        public void DefinirNivelBuscaEmLargura(int nivel)
+        {
+            BuscaLargura.Nivel = nivel;
+        }
+
+        #endregion 
 
         #region Caminho Mínimo
 
@@ -97,43 +127,6 @@
         }
         #endregion Caminho Mínimo
 
-        #region Busca em Largura
-        public void ResetBuscaEmLargura()
-        {
-            BuscaEmlargura = new BuscaEmlargura();
-        }
-
-        public Vertice? ObterPaiBuscaEmLargura()
-        {
-            return BuscaEmlargura.Pai;
-        }
-
-        public void DefinirPaiBuscaEmLargura(Vertice pai)
-        {
-            BuscaEmlargura.Pai = pai;
-        }
-
-        public int ObterIndiceBuscaEmLargura()
-        {
-            return BuscaEmlargura.Indice;
-        }
-
-        public void DefinirIndiceBuscaEmLargura(int indice)
-        {
-            BuscaEmlargura.Indice = indice;
-        }
-
-        public int ObterNivelBuscaEmLargura()
-        {
-            return BuscaEmlargura.Nivel;
-        }
-
-        public void DefinirNivelBuscaEmLargura(int nivel)
-        {
-            BuscaEmlargura.Nivel = nivel;
-        }
-
-        #endregion Busca em Largura
     }
 
     public class BuscaProfundidade
@@ -150,13 +143,13 @@
         }
     }
 
-    public class BuscaEmlargura
+    public class BuscaLargura
     {
         public int Indice { get; set; }
         public int Nivel { get; set; }
         public Vertice? Pai { get; set; }
 
-        public BuscaEmlargura()
+        public BuscaLargura()
         {
             Indice = 0;
             Nivel = 0;

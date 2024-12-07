@@ -1,54 +1,53 @@
-﻿using Grafos.Interfaces;
+using Grafos.Interfaces;
 using Grafos.Models;
 
-namespace Grafos.Classes.MatrizAdjacencia
+namespace Grafos.Classes.ListaAdjacencia
 {
-    public partial class GrafoMatrizAdjacencia : IGrafo, IMatrizAdjacencia
+    public class GrafoListaAdjacencia : IGrafo
     {
         #region Propriedades
-        public Aresta[,] MatrizDeAdjacencia { get; set; }
-        public List<Vertice> Vertices { get; set; }
+        public List<Aresta> Arestas { get; set; }
+        public List<Vertice>[] Vertices { get; set; }
         #endregion
 
         #region Construtores
-        public GrafoMatrizAdjacencia()
+        public GrafoListaAdjacencia()
         {
+
         }
 
-        public GrafoMatrizAdjacencia(List<Aresta> arestas, List<Vertice> vertices)
+        public GrafoListaAdjacencia(List<Vertice>[] vertices, List<Aresta> arestas)
         {
             Vertices = vertices;
-            var matriz = new Aresta[vertices.Count + 1, vertices.Count + 1];
-
-            foreach (var aresta in arestas)
-            {
-                matriz[aresta.Origem.Id, aresta.Destino.Id] = aresta;
-            }
-
-            MatrizDeAdjacencia = matriz;
+            Arestas = arestas;
         }
 
         public IGrafo InicializarGrafo(List<Vertice> vertices, List<Aresta> arestas)
         {
-            Vertices = vertices;
-
-            // Matriz é criada com tamanho + 1 para permitir uso direto dos IDs como índices
-            // Índice 0 não é utilizado, simplificando o acesso à matriz
-            var matriz = new Aresta[vertices.Count + 1, vertices.Count + 1];
+            Vertices = new List<Vertice>[vertices.Count + 1];
 
             foreach (var aresta in arestas)
             {
-                matriz[aresta.Origem.Id, aresta.Destino.Id] = aresta;
+                for (int i = 1; i < Vertices.Length; i++)
+                {
+                    if (Vertices[i] == null)
+                    {
+                        Vertices[i] = new List<Vertice>();
+                    }
+
+                    if (aresta.Origem?.Id == i)
+                    {
+                        Vertices[i].Add(aresta.Destino);
+                    }
+                }
             }
 
-            MatrizDeAdjacencia = matriz;
-
+            Arestas = arestas;
             return this;
         }
         #endregion
 
         #region Métodos de consulta simples
-
         /// <summary>
         /// Retorna um vértice a partir do seu ID.
         /// </summary>
@@ -57,7 +56,7 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <exception cref="ArgumentException">Se o vértice não for encontrado.</exception>
         public Vertice ObterVertice(int id)
         {
-            var vertice = Vertices.FirstOrDefault(v => v.Id == id);
+            var vertice = Vertices[id].FirstOrDefault();
 
             if (vertice == null)
                 throw new ArgumentException($"Vértice com ID {id} não encontrado.");
@@ -74,7 +73,7 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <exception cref="ArgumentException">Se a aresta não for encontrada.</exception>
         public Aresta ObterAresta(int idOrigem, int idDestino)
         {
-            var aresta = MatrizDeAdjacencia[idOrigem, idDestino];
+            var aresta = Arestas.FirstOrDefault(a => a.Origem?.Id == idOrigem && a.Destino?.Id == idDestino);
 
             if (aresta == null)
                 throw new ArgumentException($"Aresta ({idOrigem}, {idDestino}) não encontrada.");
@@ -88,27 +87,18 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Lista com todos os vértices.</returns>
         public List<Vertice> ObterTodosVertices()
         {
-            return Vertices;
+            return Vertices.SelectMany(v => v).ToList();
         }
 
         /// <summary>
         /// Retorna todas as arestas do grafo.
         /// </summary>
-        /// <returns>Lista com todas as arestas.</returns>
+        /// <returns>Lista com todos as arestas.</returns>
         public List<Aresta> ObterTodasArestas()
         {
-            var arestas = new List<Aresta>();
-            for (int i = 1; i <= Vertices.Count; i++)
-            {
-                for (int j = 1; j <= Vertices.Count; j++)
-                {
-                    if (MatrizDeAdjacencia[i, j] != null)
-                        arestas.Add(MatrizDeAdjacencia[i, j]);
-                }
-            }
-            return arestas;
+            return Arestas;
         }
-        #endregion 
+        #endregion
 
         #region Métodos de consulta complexos
 
@@ -121,17 +111,18 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Uma lista de arestas adjacentes.</returns>
         public List<Aresta> ObterAdjacenciasDaAresta(int idOrigem, int idDestino)
         {
-            if (MatrizDeAdjacencia[idOrigem, idDestino] == null)
-                throw new ArgumentException("Aresta não encontrada.");
+            var aresta = ObterAresta(idOrigem, idDestino);
+            var adjacencias = new List<Aresta>();
 
-            var arestasAdjacentes = new List<Aresta>();
-
-            for (int i = 1; i <= Vertices.Count; i++)
+            foreach (var a in Arestas)
             {
-                if (MatrizDeAdjacencia[i, idDestino] != null)
-                    arestasAdjacentes.Add(MatrizDeAdjacencia[i, idDestino]);
+                if (a.Destino?.Id == aresta.Destino?.Id)
+                {
+                    adjacencias.Add(a);
+                }
             }
-            return arestasAdjacentes;
+
+            return adjacencias;
         }
 
         /// <summary>
@@ -144,15 +135,15 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Uma lista de vértices adjacentes.</returns>
         public List<Vertice> ObterVizinhanca(int idVertice)
         {
-            var adjacentes = new List<Vertice>();
+            var vertice = ObterVertice(idVertice);
+            var vizinhanca = new List<Vertice>();
 
-            for (int i = 1; i <= Vertices.Count; i++)
+            foreach (var vizinho in Vertices[vertice.Id])
             {
-                if (MatrizDeAdjacencia[idVertice, i] != null)
-                    adjacentes.Add(Vertices[i - 1]);
+                vizinhanca.Add(vizinho);
             }
 
-            return adjacentes;
+            return vizinhanca;
         }
 
         /// <summary>
@@ -163,12 +154,15 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Uma lista de arestas incidentes.</returns>
         public List<Aresta> ObterArestasIncidentes(int idVertice)
         {
+            var vertice = ObterVertice(idVertice);
             var arestasIncidentes = new List<Aresta>();
 
-            for (int i = 1; i <= Vertices.Count; i++)
+            foreach (var aresta in Arestas)
             {
-                if (MatrizDeAdjacencia[i, idVertice] != null)
-                    arestasIncidentes.Add(MatrizDeAdjacencia[i, idVertice]);
+                if (aresta.Destino?.Id == vertice.Id)
+                {
+                    arestasIncidentes.Add(aresta);
+                }
             }
 
             return arestasIncidentes;
@@ -183,12 +177,15 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Uma lista de arestas adjacentes.</returns>
         public List<Aresta> ObterArestasAdjacentes(int idVertice)
         {
+            var vertice = ObterVertice(idVertice);
             var arestasAdjacentes = new List<Aresta>();
 
-            for (int i = 1; i <= Vertices.Count; i++)
+            foreach (var aresta in Arestas)
             {
-                if (MatrizDeAdjacencia[idVertice, i] != null)
-                    arestasAdjacentes.Add(MatrizDeAdjacencia[idVertice, i]);
+                if (aresta.Origem?.Id == vertice.Id)
+                {
+                    arestasAdjacentes.Add(aresta);
+                }
             }
 
             return arestasAdjacentes;
@@ -202,10 +199,9 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>Uma tupla contendo os IDs dos vértices de origem e destino.</returns>
         public (int origem, int destino) ObterVerticesIncidentes(int idOrigem, int idDestino)
         {
-            if (MatrizDeAdjacencia[idOrigem, idDestino] == null)
-                throw new ArgumentException("Aresta não encontrada.");
+            var aresta = ObterAresta(idOrigem, idDestino);
 
-            return (idOrigem, idDestino);
+            return (aresta.Origem.Id, aresta.Destino.Id);
         }
 
         /// <summary>
@@ -215,17 +211,9 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>O número de arestas que saem do vértice.</returns>
         public int ObterGrauDoVertice(int idVertice)
         {
-            int grau = 0;
+            var vertice = ObterVertice(idVertice);
 
-            for (int j = 1; j <= Vertices.Count; j++)
-            {
-                if (MatrizDeAdjacencia[idVertice, j] != null)
-                {
-                    grau++;
-                }
-            }
-
-            return grau;
+            return ObterArestasAdjacentes(vertice.Id).Count;
         }
 
         /// <summary>
@@ -236,94 +224,79 @@ namespace Grafos.Classes.MatrizAdjacencia
         /// <returns>True se existe uma aresta de v1 para v2, False caso contrário.</returns>
         public bool VerificarAdjacenciaEntreVertices(int idV1, int idV2)
         {
-            return MatrizDeAdjacencia[idV1, idV2] != null;
+            var vertice1 = ObterVertice(idV1);
+            var vertice2 = ObterVertice(idV2);
+
+            return Arestas.Any(a => a.Origem?.Id == vertice1.Id && a.Destino?.Id == vertice2.Id);
         }
-        #endregion 
+        #endregion
 
         #region Métodos de modificação
-
-        /// <summary>
-        /// Altera o peso de uma aresta existente.
-        /// </summary>
-        /// <param name="idOrigem">ID do vértice de origem da aresta.</param>
-        /// <param name="idDestino">ID do vértice de destino da aresta.</param>
-        /// <param name="novoPeso">O novo peso da aresta.</param>
-        /// <exception cref="ArgumentException">Se a aresta não existir no grafo.</exception>
         public void SubstituirPesoAresta(int idOrigem, int idDestino, int novoPeso)
         {
-            if (MatrizDeAdjacencia[idOrigem, idDestino] != null)
-            {
-                MatrizDeAdjacencia[idOrigem, idDestino].Peso = novoPeso;
-            }
-            else
-            {
-                throw new ArgumentException($"Aresta ({idOrigem}, {idDestino}) não encontrada no grafo.");
-            }
+            var aresta = ObterAresta(idOrigem, idDestino);
+            aresta.Peso = novoPeso;
         }
 
         public void TrocarVertices(int idV1, int idV2)
         {
-            //Adicionar verficações: Id igual
-            //Fazer esse trem
-            var arestasV1 = ObterArestasIncidentes(idV1);
-            var arestasV2 = ObterArestasIncidentes(idV2);
+            var vertice1 = ObterVertice(idV1);
+            var vertice2 = ObterVertice(idV2);
 
-            for (int i = 1; i <= Vertices.Count; i++)
+            foreach (var aresta in Arestas)
             {
-
+                if (aresta.Origem?.Id == vertice1.Id)
+                {
+                    aresta.Origem = vertice2;
+                }
+                if (aresta.Destino?.Id == vertice1.Id)
+                {
+                    aresta.Destino = vertice2;
+                }
+                if (aresta.Origem?.Id == vertice2.Id)
+                {
+                    aresta.Origem = vertice1;
+                }
+                if (aresta.Destino?.Id == vertice2.Id)
+                {
+                    aresta.Destino = vertice1;
+                }
             }
+
+            // var verticesAux = Vertices[vertice1.Id];
+
+            // Vertices[vertice1.Id] = Vertices[vertice2.Id];
+            // Vertices[vertice2.Id] = verticesAux;
+
+            (Vertices[vertice2.Id], Vertices[vertice1.Id]) = (Vertices[vertice1.Id], Vertices[vertice2.Id]);
         }
-        #endregion 
+        #endregion
 
         #region Métodos de exibição
         public void ExibirRepresentacao()
         {
-            if (Vertices == null || MatrizDeAdjacencia == null)
+            if (Vertices == null || Arestas == null)
                 throw new InvalidOperationException("Grafo não inicializado");
 
-            Console.WriteLine("\nMatriz de Adjacências:");
+            Console.WriteLine("\nLista de Adjacências:");
 
-            Console.Write("   ");
-            for (int i = 1; i <= Vertices.Count; i++)
+            for (int i = 1; i < Vertices.Length; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"{i,3}");
+                Console.Write($"{i} -> ");
                 Console.ResetColor();
-            }
-            Console.WriteLine();
 
-            Console.Write("   ");
-            for (int i = 1; i <= Vertices.Count; i++)
-                Console.Write("---");
-            Console.WriteLine();
-
-            for (int i = 1; i <= Vertices.Count; i++)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"{i,2}");
-                Console.ResetColor();
-                Console.Write("|");
-
-                for (int j = 1; j <= Vertices.Count; j++)
+                for (int j = 1; j < Vertices.Length; j++)
                 {
-                    var aresta = MatrizDeAdjacencia[i, j];
-                    if (aresta == null)
+                    if (Vertices[i] != null && Vertices[i].Any(v => v.Id == j))
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(" - ");
+                        Console.Write(j + " -> ");
                     }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write($"{aresta.Peso,3}");
-                    }
-                    Console.ResetColor();
                 }
-                Console.WriteLine();
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
+                Console.WriteLine("\u23DA");
             }
         }
         #endregion
     }
 }
-
-
