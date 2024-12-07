@@ -62,68 +62,85 @@ namespace Grafos.Menus
                 Console.Write("Digite a quantidade de arestas: ");
                 int numArestas = int.Parse(Console.ReadLine() ?? "0");
 
-                // Calcula densidade
                 double densidade = CalcularDensidade(numVertices, numArestas);
                 Console.WriteLine($"\nDensidade do grafo: {densidade:F2}");
 
-                // Decide representação baseado na densidade
-                if (densidade > 0.5)
-                {
-                    Console.WriteLine("Usando Matriz de Adjacência (densidade > 0,5)");
-                    grafo = new GrafoMatrizAdjacencia();
-                }
-                else
-                {
-                    Console.WriteLine("Usando Lista de Adjacência (densidade <= 0,5)");
-                    grafo = new GrafoListaAdjacencia();
-                }
+                ObterRepresentacaoPorDensidade(densidade);
 
-                // Criar vértices
-                var vertices = new List<Vertice>();
-                for (int i = 1; i <= numVertices; i++)
-                {
-                    vertices.Add(new Vertice());
-                }
+                var vertices = CriarVertices(numVertices);
+                var arestas = CriarArestas(numVertices, numArestas, vertices);
 
-                // Criar arestas
-                var arestas = new List<Aresta>();
-                Console.WriteLine("\nDigite as informações das arestas");
+                grafo?.InicializarGrafo(vertices, arestas);
 
-                for (int i = 0; i < numArestas; i++)
-                {
-                    Console.WriteLine($"\nAresta {i + 1}");
-
-                    Console.Write("Vértice de origem (1 a {0}): ", numVertices);
-                    int origem = int.Parse(Console.ReadLine() ?? "0");
-
-                    Console.Write("Vértice de destino (1 a {0}): ", numVertices);
-                    int destino = int.Parse(Console.ReadLine() ?? "0");
-
-                    Console.Write("Peso da aresta: ");
-                    int peso = int.Parse(Console.ReadLine() ?? "0");
-
-                    if (origem < 1 || origem > numVertices ||
-                        destino < 1 || destino > numVertices)
-                    {
-                        throw new ArgumentException("Vértices inválidos!");
-                    }
-
-                    var arestaOrigem = vertices.Find(v => v.Id == origem);
-                    var arestaDestino = vertices.Find(v => v.Id == destino);
-
-                    if (arestaOrigem != null && arestaDestino != null)
-                    {
-                        arestas.Add(new Aresta(arestaOrigem, arestaDestino, peso));
-                    }
-                }
-
-                grafo.InicializarGrafo(vertices, arestas);
                 Console.WriteLine("\nGrafo criado com sucesso!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"\nErro ao criar grafo: {ex.Message}");
             }
+        }
+
+        private void ObterRepresentacaoPorDensidade(double densidade)
+        {
+            if (densidade > 0.5)
+            {
+                Console.WriteLine("Usando Matriz de Adjacência (densidade > 0,5)");
+                grafo = new GrafoMatrizAdjacencia();
+            }
+            else
+            {
+                Console.WriteLine("Usando Lista de Adjacência (densidade <= 0,5)");
+                grafo = new GrafoListaAdjacencia();
+            }
+        }
+
+        private static List<Vertice> CriarVertices(int numVertices)
+        {
+            var vertices = new List<Vertice>();
+
+            for (int i = 1; i <= numVertices; i++)
+            {
+                vertices.Add(new Vertice());
+            }
+
+            return vertices;
+        }
+
+        private static List<Aresta> CriarArestas(int numVertices, int numArestas, List<Vertice> vertices)
+        {
+            var arestas = new List<Aresta>();
+
+            Console.WriteLine("\nDigite as informações das arestas");
+
+            for (int i = 0; i < numArestas; i++)
+            {
+                Console.WriteLine($"\nAresta {i + 1}");
+
+                Console.Write("Vértice de origem (1 a {0}): ", numVertices);
+                int origem = int.Parse(Console.ReadLine() ?? "0");
+
+                Console.Write("Vértice de destino (1 a {0}): ", numVertices);
+                int destino = int.Parse(Console.ReadLine() ?? "0");
+
+                Console.Write("Peso da aresta: ");
+                int peso = int.Parse(Console.ReadLine() ?? "0");
+
+                if (origem < 1 || origem > numVertices ||
+                    destino < 1 || destino > numVertices)
+                {
+                    throw new ArgumentException("Vértices inválidos!");
+                }
+
+                var arestaOrigem = vertices.Find(v => v.Id == origem);
+                var arestaDestino = vertices.Find(v => v.Id == destino);
+
+                if (arestaOrigem != null && arestaDestino != null)
+                {
+                    arestas.Add(new Aresta(arestaOrigem, arestaDestino, peso));
+                }
+            }
+
+            return arestas;
         }
 
         private void RepresentarGrafo()
