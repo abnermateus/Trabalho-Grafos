@@ -1,14 +1,15 @@
-using Grafos.Classes.MatrizAdjacencia;
-using Grafos.Classes.ListaAdjacencia;
+using Grafos.Algoritmos;
 using Grafos.Interfaces;
-using Grafos.Models;
-using static Grafos.Utils.Utils;
+using Grafos.LeitorDimac;
 
 namespace Grafos.Menus
 {
     public class Menu2
     {
         private IGrafo? grafo;
+        private const string SolicitaVertice = "Digite o vértice: ";
+        private const string SolicitaOrigem = "Digite o vértice de origem: ";
+        private const string SolicitaDestino = "Digite o vértice de destino: ";
 
         public void ExecutarMenu()
         {
@@ -30,6 +31,12 @@ namespace Grafos.Menus
                             LerArquivoDimac();
                             break;
                         case 2:
+                            if (grafo == null)
+                            {
+                                Console.WriteLine("Grafo não foi carregado!");
+                                break;
+                            }
+
                             InteragirComGrafo();
                             break;
                         case 0:
@@ -50,28 +57,25 @@ namespace Grafos.Menus
             } while (opcao != 0);
         }
 
-        
+
         private void LerArquivoDimac()
         {
-           var dimac = new DimacReader();
+            Console.Write("Digite o caminho do arquivo: ");
+            var caminho = Console.ReadLine();
 
-           Console.Write("Digite o caminho do arquivo: ");
-           var caminho = Console.ReadLine();
-
-           try {
-                grafo = dimac.LerArquivo(caminho);
-           }
-           catch (Exception ex)
+            try
+            {
+                grafo = DimacReader.LerArquivo(caminho);
+                Console.WriteLine("Grafo criado com sucesso!\n");
+                grafo.ExibirRepresentacao();
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"\nErro ao ler o grafo: {ex.Message}");
             }
-            finally
-            {
-                Console.WriteLine("Grafo criado com sucesso!");
-            }
         }
 
-        private static void InteragirComGrafo()
+        private void InteragirComGrafo()
         {
             int opcao;
             do
@@ -95,50 +99,53 @@ namespace Grafos.Menus
 
                 if (int.TryParse(Console.ReadLine(), out opcao))
                 {
-                    // switch (opcao)
-                    // {
-                    //     case 1:
-                    //         ImprimirArestasAdjacentes();
-                    //         break;
-                    //     case 2:
-                    //         ImprimirVerticesAdjacentes();
-                    //         break;
-                    //     case 3:
-                    //         ImprimirArestasIncidentes();
-                    //         break;
-                    //     case 4:
-                    //         ImprimirVerticesIncidentais();
-                    //         break;
-                    //     case 5:
-                    //         ImprimirGrauVertice();
-                    //         break;
-                    //     case 6:
-                    //         DeterminarAdjacencia();
-                    //         break;
-                    //     case 7:
-                    //         SubstituirPesoAresta();
-                    //         break;
-                    //     case 8:
-                    //         TrocarVertices();
-                    //         break;
-                    //     case 9:
-                    //         BuscaLargura();
-                    //         break;
-                    //     case 10:
-                    //         BuscaProfundidade();
-                    //         break;
-                    //     case 11:
-                    //         Dijkstra();
-                    //         break;
-                    //     case 12:
-                    //         FloydWarshall();
-                    //         break;
-                    //     case 0:
-                    //         return;
-                    //     default:
-                    //         Console.WriteLine("Opção inválida!");
-                    //         break;
-                    // }
+                    switch (opcao)
+                    {
+                        case 1:
+                            ImprimirArestasAdjacentes();
+                            break;
+                        case 2:
+                            ImprimirVerticesAdjacentes();
+                            break;
+                        case 3:
+                            ImprimirArestasIncidentes();
+                            break;
+                        case 4:
+                            ImprimirVerticesIncidentais();
+                            break;
+                        case 5:
+                            ImprimirGrauVertice();
+                            break;
+                        case 6:
+                            DeterminarAdjacencia();
+                            break;
+                        case 7:
+                            SubstituirPesoAresta();
+                            break;
+                        case 8:
+                            TrocarVertices();
+                            break;
+                        case 9:
+                            BuscaLargura();
+                            break;
+                        case 10:
+                            BuscaProfundidade();
+                            break;
+                        case 11:
+                            Dijkstra();
+                            break;
+                        case 12:
+                            FloydWarshall();
+                            break;
+                        case 13:
+                            grafo.ExibirRepresentacao();
+                            break;
+                        case 0:
+                            return;
+                        default:
+                            Console.WriteLine("Opção inválida!");
+                            break;
+                    }
                 }
 
                 if (opcao != 0)
@@ -148,6 +155,115 @@ namespace Grafos.Menus
                 }
 
             } while (opcao != 0);
+        }
+
+        private void ImprimirArestasAdjacentes()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+            Console.Write(SolicitaDestino);
+            var destino = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"\nArestas adjacentes à aresta ({origem}, {destino}): {grafo.ObterAdjacenciasDaAresta(origem, destino)}");
+        }
+
+        private void ImprimirVerticesAdjacentes()
+        {
+            Console.Write(SolicitaVertice);
+            var vertice = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"\nVértices adjacentes ao vértice {vertice}: {grafo.ObterVizinhanca(vertice)}");
+        }
+
+        private void ImprimirArestasIncidentes()
+        {
+            Console.Write(SolicitaVertice);
+            var vertice = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"\nArestas incidentes ao vértice {vertice}: {grafo.ObterArestasIncidentes(vertice)}");
+        }
+
+        private void ImprimirVerticesIncidentais()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+            Console.Write(SolicitaDestino);
+            var destino = int.Parse(Console.ReadLine());
+
+            var (v1, v2) = grafo.ObterVerticesIncidentes(origem, destino);
+            Console.WriteLine($"\nVértices incidentes à aresta ({origem}, {destino}): {v1}, {v2}");
+        }
+
+        private void ImprimirGrauVertice()
+        {
+            Console.Write(SolicitaVertice);
+            var vertice = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"\nGrau do vértice {vertice}: {grafo.ObterGrauDoVertice(vertice)}");
+        }
+
+        private void DeterminarAdjacencia()
+        {
+            Console.Write(SolicitaOrigem);
+            var v1 = int.Parse(Console.ReadLine());
+            Console.Write(SolicitaDestino);
+            var v2 = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"\nOs vértices {v1} e {v2} são adjacentes? {grafo.VerificarAdjacenciaEntreVertices(v1, v2)}");
+        }
+
+        private void SubstituirPesoAresta()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+            Console.Write(SolicitaDestino);
+            var destino = int.Parse(Console.ReadLine());
+            Console.Write("Digite o novo peso: ");
+            var peso = int.Parse(Console.ReadLine());
+
+            grafo.SubstituirPesoAresta(origem, destino, peso);
+            Console.WriteLine("\nPeso substituído com sucesso!");
+        }
+
+        private void TrocarVertices()
+        {
+            Console.Write(SolicitaOrigem);
+            var v1 = int.Parse(Console.ReadLine());
+            Console.Write(SolicitaDestino);
+            var v2 = int.Parse(Console.ReadLine());
+
+            grafo.TrocarVertices(v1, v2);
+            Console.WriteLine("\nVértices trocados com sucesso!");
+        }
+
+        private void BuscaLargura()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+
+            grafo.ExecutarBuscaEmLargura(origem).GerarTabelaBuscaEmLargura();
+        }
+
+        private void BuscaProfundidade()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+
+            grafo.ExecutarBuscaEmProfundidade(origem);
+        }
+
+        private void Dijkstra()
+        {
+            Console.Write(SolicitaOrigem);
+            var origem = int.Parse(Console.ReadLine());
+
+            grafo.ExecutarDijkstra(origem);
+            grafo.ImprimirTabelaCaminhoMinimo();
+        }
+
+        private void FloydWarshall()
+        {
+
         }
     }
 }

@@ -28,8 +28,7 @@ namespace Grafos
 
             // GrafoDesafio.ExecutarBuscaEmLargura(1).GerarTabelaBuscaEmLargura(3);
 
-            MenuPrincipal menu = new MenuPrincipal();
-            menu.ExecutarMenu();
+            MenuPrincipal.ExecutarMenu();
         }
     }
 }

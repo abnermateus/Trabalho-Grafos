@@ -1,18 +1,8 @@
-using System;
-using Grafos.Classes.MatrizAdjacencia;
-using Grafos.Classes.ListaAdjacencia;
-using Grafos.Interfaces;
-using Grafos.Models;
-using static Grafos.Utils.Utils;
-using Grafos.LeitorDimac;
-
 namespace Grafos.Menus
 {
-    public class MenuPrincipal
+    public static class MenuPrincipal
     {
-        private IGrafo? grafo;
-
-        public void ExecutarMenu()
+        public static void ExecutarMenu()
         {
             int opcao;
             do
@@ -29,12 +19,14 @@ namespace Grafos.Menus
                     switch (opcao)
                     {
                         case 1:
-                            Menu1 menu1 = new Menu1();
+                            var menu1 = new Menu1();
                             menu1.ExecutarMenu();
+                            Console.Clear();
                             break;
                         case 2:
-                            Menu2 menu2 = new Menu2();
+                            var menu2 = new Menu2();
                             menu2.ExecutarMenu();
+                            Console.Clear();
                             break;
                         case 0:
                             Console.WriteLine("Saindo...");
