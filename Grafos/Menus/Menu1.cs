@@ -6,7 +6,7 @@ using static Grafos.Utils.Utils;
 
 namespace Grafos.Menus
 {
-    public class Menu
+    public class Menu1
     {
         private IGrafo? grafo;
 
@@ -16,7 +16,7 @@ namespace Grafos.Menus
             do
             {
                 Console.Clear();
-                Console.WriteLine("=== Menu Principal ===");
+                Console.WriteLine("=== Menu 1 ===");
                 Console.WriteLine("1 - Criar novo grafo");
                 Console.WriteLine("2 - Exibir representação do grafo");
                 Console.WriteLine("0 - Sair");
