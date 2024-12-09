@@ -170,9 +170,6 @@ namespace Grafos.Menus
         {
             var quantidadeVertices = grafo?.ObterTodosVertices().Count;
 
-            if (EhListaAdjacencia())
-                quantidadeVertices--;
-
             Console.Write(SOLICITA_ORIGEM + $"(1-{quantidadeVertices}): ");
             origem = int.Parse(Console.ReadLine());
             Console.Write(SOLICITA_DESTINO + $"(1-{quantidadeVertices}): ");
@@ -182,9 +179,6 @@ namespace Grafos.Menus
         private void SolicitarVertice(out int vertice)
         {
             var quantidadeVertices = grafo?.ObterTodosVertices().Count;
-
-            if (EhListaAdjacencia())
-                quantidadeVertices--;
 
             Console.Write(SOLICITA_VERTICE + $"(1-{quantidadeVertices}): ");
             vertice = int.Parse(Console.ReadLine());
@@ -209,7 +203,7 @@ namespace Grafos.Menus
                     Console.WriteLine();
                 }
                 else
-                    Console.WriteLine("Nenhuma aresta adjacente encontrada.\n");
+                    Console.WriteLine("Nenhuma aresta adjacente encontrada.");
             }
             catch (Exception ex)
             {
@@ -236,7 +230,7 @@ namespace Grafos.Menus
                     Console.WriteLine();
                 }
                 else
-                    Console.WriteLine("Nenhum vértice adjacente encontrado.\n");
+                    Console.WriteLine("Nenhum vértice adjacente encontrado.");
             }
             catch (Exception ex)
             {
@@ -263,7 +257,7 @@ namespace Grafos.Menus
                     Console.WriteLine();
                 }
                 else
-                    Console.WriteLine("Nenhuma aresta incidente encontrada.\n");
+                    Console.WriteLine("Nenhuma aresta incidente encontrada.");
             }
             catch (Exception ex)
             {
@@ -371,7 +365,11 @@ namespace Grafos.Menus
                 SolicitarVertice(out int origem);
 
                 var temCiclo = grafo?.ExecutarBuscaEmProfundidade(origem);
-                grafo.GerarTabelaBuscaEmProfundidade();
+
+                if (temCiclo.HasValue && temCiclo.Value)
+                    Console.WriteLine("\nO grafo possui ciclo.");
+                else
+                    grafo.GerarTabelaBuscaEmProfundidade();
             }
             catch (Exception ex)
             {

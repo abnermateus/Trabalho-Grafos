@@ -54,17 +54,11 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <param name="id">ID do vértice.</param>
         /// <returns>O vértice correspondente ao ID.</returns>
         /// <exception cref="ArgumentException">Se o vértice não for encontrado.</exception>
+        /// 
+
         public Vertice ObterVertice(int id)
         {
-            if (id <= 0 || id >= Vertices.Length)
-                throw new ArgumentException($"Vértice {id} está fora dos limites permitidos.");
-
-            var vertices = Vertices.SelectMany(lista => lista).Where(v => v.Id == id).ToList();
-
-            if (vertices == null)
-                throw new ArgumentException($"Vértice {id} não encontrado.");
-
-            return vertices.FirstOrDefault();
+            return null;
         }
 
         /// <summary>
@@ -90,7 +84,7 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>Lista com todos os vértices.</returns>
         public List<Vertice> ObterTodosVertices()
         {
-            return Vertices.Where(v => v != null).Select(v => v.FirstOrDefault()).ToList();
+            return null;
         }
 
         /// <summary>
@@ -136,17 +130,17 @@ namespace Grafos.Classes.ListaAdjacencia
         /// </summary>
         /// <param name="idVertice">ID do vértice de referência.</param>
         /// <returns>Uma lista de vértices adjacentes.</returns>
-        public List<Vertice> ObterVizinhanca(int idVertice)
+        public List<Vertice> ObterVizinhanca(int id)
         {
-            var vertice = ObterVertice(idVertice);
-            var vizinhanca = new List<Vertice>();
+            if (id <= 0 || id >= Vertices.Length)
+                throw new ArgumentException($"Vértice {id} está fora dos limites permitidos.");
 
-            foreach (var vizinho in Vertices[vertice.Id])
-            {
-                vizinhanca.Add(vizinho);
-            }
+            var vertices = Vertices[id];
 
-            return vizinhanca;
+            if (vertices == null)
+                throw new ArgumentException($"Vértice {id} não encontrado.");
+
+            return vertices;
         }
 
         /// <summary>
@@ -157,12 +151,11 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>Uma lista de arestas incidentes.</returns>
         public List<Aresta> ObterArestasIncidentes(int idVertice)
         {
-            var vertice = ObterVertice(idVertice);
             var arestasIncidentes = new List<Aresta>();
 
             foreach (var aresta in Arestas)
             {
-                if (aresta.Destino?.Id == vertice.Id)
+                if (aresta.Destino?.Id == idVertice)
                 {
                     arestasIncidentes.Add(aresta);
                 }
@@ -180,12 +173,11 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>Uma lista de arestas adjacentes.</returns>
         public List<Aresta> ObterArestasAdjacentes(int idVertice)
         {
-            var vertice = ObterVertice(idVertice);
             var arestasAdjacentes = new List<Aresta>();
 
             foreach (var aresta in Arestas)
             {
-                if (aresta.Origem?.Id == vertice.Id)
+                if (aresta.Origem?.Id == idVertice)
                 {
                     arestasAdjacentes.Add(aresta);
                 }
@@ -214,9 +206,7 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>O número de arestas que saem do vértice.</returns>
         public int ObterGrauDoVertice(int idVertice)
         {
-            var vertice = ObterVertice(idVertice);
-
-            return ObterArestasAdjacentes(vertice.Id).Count;
+            return ObterArestasAdjacentes(idVertice).Count;
         }
 
         /// <summary>
@@ -227,10 +217,7 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>True se existe uma aresta de v1 para v2, False caso contrário.</returns>
         public bool VerificarAdjacenciaEntreVertices(int idV1, int idV2)
         {
-            var vertice1 = ObterVertice(idV1);
-            var vertice2 = ObterVertice(idV2);
-
-            return Arestas.Any(a => a.Origem?.Id == vertice1.Id && a.Destino?.Id == vertice2.Id);
+            return Arestas.Any(a => a.Origem?.Id == idV1 && a.Destino?.Id == idV2);
         }
         #endregion
 
