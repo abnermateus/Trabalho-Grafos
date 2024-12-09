@@ -1,4 +1,6 @@
 using Grafos.Algoritmos;
+using Grafos.Classes.ListaAdjacencia;
+using Grafos.Classes.MatrizAdjacencia;
 using Grafos.Interfaces;
 using Grafos.LeitorDimac;
 
@@ -7,9 +9,9 @@ namespace Grafos.Menus
     public class Menu2
     {
         private IGrafo? grafo;
-        private const string SolicitaVertice = "Digite o vértice: ";
-        private const string SolicitaOrigem = "Digite o vértice de origem: ";
-        private const string SolicitaDestino = "Digite o vértice de destino: ";
+        private const string SOLICITA_VERTICE = "Vértice ";
+        private const string SOLICITA_ORIGEM = "Vértice de origem ";
+        private const string SOLICITA_DESTINO = "Vértice de destino ";
 
         public void ExecutarMenu()
         {
@@ -33,7 +35,7 @@ namespace Grafos.Menus
                         case 2:
                             if (grafo == null)
                             {
-                                Console.WriteLine("Grafo não foi carregado!");
+                                Console.WriteLine("\nGrafo ainda não foi carregado!");
                                 break;
                             }
 
@@ -57,17 +59,18 @@ namespace Grafos.Menus
             } while (opcao != 0);
         }
 
-
         private void LerArquivoDimac()
         {
-            Console.Write("Digite o caminho do arquivo: ");
+            Console.Write("\nDigite o caminho do arquivo: ");
             var caminho = Console.ReadLine();
+
+            grafo = null;
 
             try
             {
                 grafo = DimacReader.LerArquivo(caminho);
-                Console.WriteLine("Grafo criado com sucesso!\n");
-                grafo.ExibirRepresentacao();
+                Console.WriteLine("\nGrafo obtido com sucesso!");
+                RepresentarGrafo();
             }
             catch (Exception ex)
             {
@@ -87,13 +90,14 @@ namespace Grafos.Menus
                 Console.WriteLine("3 - Imprimir todas as arestas incidentes a um vértice");
                 Console.WriteLine("4 - Imprimir todos os vértices incidentes a uma aresta");
                 Console.WriteLine("5 - Imprimir o grau do vértice");
-                Console.WriteLine("6 - Determinar se dois vértices são adjacentes");
+                Console.WriteLine("6 - Verificar se dois vértices são adjacentes");
                 Console.WriteLine("7 - Substituir o peso de uma aresta");
                 Console.WriteLine("8 - Trocar dois vértices");
                 Console.WriteLine("9 - Busca em Largura");
                 Console.WriteLine("10 - Busca em Profundidade");
                 Console.WriteLine("11 - Dijkstra");
                 Console.WriteLine("12 - Floyd-Warshall");
+                Console.WriteLine("13 - Exibir representação do grafo");
                 Console.WriteLine("0 - Voltar");
                 Console.Write("\nEscolha uma opção: ");
 
@@ -138,7 +142,7 @@ namespace Grafos.Menus
                             FloydWarshall();
                             break;
                         case 13:
-                            grafo.ExibirRepresentacao();
+                            RepresentarGrafo();
                             break;
                         case 0:
                             return;
@@ -157,113 +161,264 @@ namespace Grafos.Menus
             } while (opcao != 0);
         }
 
+        private bool EhListaAdjacencia()
+        {
+            return grafo is GrafoListaAdjacencia;
+        }
+
+        private void SolicitarAresta(out int origem, out int destino)
+        {
+            var quantidadeVertices = grafo?.ObterTodosVertices().Count;
+
+            Console.Write(SOLICITA_ORIGEM + $"(1-{quantidadeVertices}): ");
+            origem = int.Parse(Console.ReadLine());
+            Console.Write(SOLICITA_DESTINO + $"(1-{quantidadeVertices}): ");
+            destino = int.Parse(Console.ReadLine());
+        }
+
+        private void SolicitarVertice(out int vertice)
+        {
+            var quantidadeVertices = grafo?.ObterTodosVertices().Count;
+
+            Console.Write(SOLICITA_VERTICE + $"(1-{quantidadeVertices}): ");
+            vertice = int.Parse(Console.ReadLine());
+        }
+
         private void ImprimirArestasAdjacentes()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
-            Console.Write(SolicitaDestino);
-            var destino = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarAresta(out int origem, out int destino);
 
-            Console.WriteLine($"\nArestas adjacentes à aresta ({origem}, {destino}): {grafo.ObterAdjacenciasDaAresta(origem, destino)}");
+                var arestasAdjacentes = grafo?.ObterAdjacenciasDaAresta(origem, destino);
+
+                if (arestasAdjacentes.Count > 0)
+                {
+                    Console.Write($"\nArestas adjacentes à aresta ({origem}, {destino}): ");
+
+                    foreach (var aresta in arestasAdjacentes)
+                    {
+                        Console.Write($"({aresta.Origem.Id}, {aresta.Destino.Id}) ");
+                    }
+                    Console.WriteLine();
+                }
+                else
+                    Console.WriteLine("Nenhuma aresta adjacente encontrada.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void ImprimirVerticesAdjacentes()
         {
-            Console.Write(SolicitaVertice);
-            var vertice = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarVertice(out int vertice);
 
-            Console.WriteLine($"\nVértices adjacentes ao vértice {vertice}: {grafo.ObterVizinhanca(vertice)}");
+                var verticesAdjacentes = grafo?.ObterVizinhanca(vertice);
+
+                if (verticesAdjacentes?.Count > 0)
+                {
+                    Console.Write($"\nVértices adjacentes ao vértice {vertice}: ");
+
+                    foreach (var v in verticesAdjacentes)
+                    {
+                        Console.Write(v.Id + " ");
+                    }
+                    Console.WriteLine();
+                }
+                else
+                    Console.WriteLine("Nenhum vértice adjacente encontrado.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void ImprimirArestasIncidentes()
         {
-            Console.Write(SolicitaVertice);
-            var vertice = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarVertice(out int vertice);
 
-            Console.WriteLine($"\nArestas incidentes ao vértice {vertice}: {grafo.ObterArestasIncidentes(vertice)}");
+                var arestasIncidentes = grafo?.ObterArestasIncidentes(vertice);
+
+                if (arestasIncidentes?.Count > 0)
+                {
+                    Console.Write($"\nArestas incidentes ao vértice {vertice}: ");
+
+                    foreach (var aresta in arestasIncidentes)
+                    {
+                        Console.Write($"({aresta.Origem.Id}, {aresta.Destino.Id}) ");
+                    }
+                    Console.WriteLine();
+                }
+                else
+                    Console.WriteLine("Nenhuma aresta incidente encontrada.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void ImprimirVerticesIncidentais()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
-            Console.Write(SolicitaDestino);
-            var destino = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarAresta(out int origem, out int destino);
+                var (verticeOrigem, verticeDestino) = grafo?.ObterVerticesIncidentes(origem, destino) ?? (0, 0);
 
-            var (v1, v2) = grafo.ObterVerticesIncidentes(origem, destino);
-            Console.WriteLine($"\nVértices incidentes à aresta ({origem}, {destino}): {v1}, {v2}");
+                if (verticeOrigem != 0 && verticeDestino != 0)
+                {
+                    Console.WriteLine($"Vértices incidentes à aresta ({origem}, {destino}): ({verticeOrigem}, {verticeDestino})");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro: {ex.Message}");
+            }
         }
 
         private void ImprimirGrauVertice()
         {
-            Console.Write(SolicitaVertice);
-            var vertice = int.Parse(Console.ReadLine());
-
-            Console.WriteLine($"\nGrau do vértice {vertice}: {grafo.ObterGrauDoVertice(vertice)}");
+            try
+            {
+                SolicitarVertice(out int vertice);
+                Console.WriteLine($"\nGrau do vértice {vertice}: {grafo?.ObterGrauDoVertice(vertice)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void DeterminarAdjacencia()
         {
-            Console.Write(SolicitaOrigem);
-            var v1 = int.Parse(Console.ReadLine());
-            Console.Write(SolicitaDestino);
-            var v2 = int.Parse(Console.ReadLine());
-
-            Console.WriteLine($"\nOs vértices {v1} e {v2} são adjacentes? {grafo.VerificarAdjacenciaEntreVertices(v1, v2)}");
+            try
+            {
+                SolicitarAresta(out int origem, out int destino);
+                Console.Write($"\nOs vértices {origem} e {destino} são adjacentes?");
+                Console.WriteLine(grafo.VerificarAdjacenciaEntreVertices(origem, destino) ? " Sim" : " Não");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void SubstituirPesoAresta()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
-            Console.Write(SolicitaDestino);
-            var destino = int.Parse(Console.ReadLine());
-            Console.Write("Digite o novo peso: ");
-            var peso = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarAresta(out int origem, out int destino);
+                Console.Write("Digite o novo peso: ");
+                var peso = int.Parse(Console.ReadLine());
 
-            grafo.SubstituirPesoAresta(origem, destino, peso);
-            Console.WriteLine("\nPeso substituído com sucesso!");
+                grafo?.SubstituirPesoAresta(origem, destino, peso);
+                Console.WriteLine("\nPeso substituído com sucesso!");
+                RepresentarGrafo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void TrocarVertices()
         {
-            Console.Write(SolicitaOrigem);
-            var v1 = int.Parse(Console.ReadLine());
-            Console.Write(SolicitaDestino);
-            var v2 = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarAresta(out int origem, out int destino);
 
-            grafo.TrocarVertices(v1, v2);
-            Console.WriteLine("\nVértices trocados com sucesso!");
+                grafo?.TrocarVertices(origem, destino);
+                Console.WriteLine("\nVértices trocados com sucesso!");
+                RepresentarGrafo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void BuscaLargura()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarVertice(out int origem);
 
-            grafo.ExecutarBuscaEmLargura(origem).GerarTabelaBuscaEmLargura();
+                grafo?.ExecutarBuscaEmLargura(origem).GerarTabelaBuscaEmLargura();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void BuscaProfundidade()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarVertice(out int origem);
 
-            grafo.ExecutarBuscaEmProfundidade(origem);
+                var temCiclo = grafo?.ExecutarBuscaEmProfundidade(origem);
+
+                if (temCiclo.HasValue && temCiclo.Value)
+                    Console.WriteLine("\nO grafo possui ciclo.");
+                else
+                    grafo.GerarTabelaBuscaEmProfundidade();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void Dijkstra()
         {
-            Console.Write(SolicitaOrigem);
-            var origem = int.Parse(Console.ReadLine());
+            try
+            {
+                SolicitarVertice(out int origem);
 
-            grafo.ExecutarDijkstra(origem);
-            grafo.ImprimirTabelaCaminhoMinimo();
+                grafo?.ExecutarDijkstra(origem);
+                grafo?.ImprimirTabelaCaminhoMinimo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void FloydWarshall()
         {
+            try
+            {
+                if (!EhListaAdjacencia())
+                {
+                    var floydWarshall = ((GrafoMatrizAdjacencia)grafo)?.ExecutarFloydWarshall();
+                    ((GrafoMatrizAdjacencia)grafo).GerarTabelaDistancias(floydWarshall);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
+        private void RepresentarGrafo()
+        {
+            try
+            {
+                Console.WriteLine("\n=== Representação do Grafo ===");
+                grafo?.ExibirRepresentacao();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

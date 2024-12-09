@@ -1,4 +1,5 @@
-﻿using Grafos.Interfaces;
+﻿using System.Text;
+using Grafos.Interfaces;
 using Grafos.Models;
 
 namespace Grafos.Algoritmos
@@ -30,6 +31,29 @@ namespace Grafos.Algoritmos
                 return true;
 
             return false;
+        }
+
+        public static void GerarTabelaBuscaEmProfundidade(this IGrafo grafo)
+        {
+            var vertices = grafo.ObterTodosVertices();
+
+            if (vertices == null || vertices.Count == 0)
+            {
+                throw new InvalidOperationException("O grafo não possui vértices.");
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Resultados da Busca em Profundidade:");
+            sb.AppendLine(new string('-', 60)); // Separador
+            sb.AppendLine($"{"Vértice",-10} {"Descoberta",-15} {"Término",-15} {"Pai",-10}"); // Cabeçalho
+            sb.AppendLine(new string('-', 60)); // Separador
+
+            foreach (var vertice in vertices.OrderBy(v => v.Id))
+            {
+                sb.AppendLine($"{vertice.Id,-10} {vertice.ObterTempoDescoberta(),-15} {vertice.ObterTempoTermino(),-15} {(vertice.ObterPai()?.Id.ToString() ?? "-"),-10}");
+            }
+
+            Console.WriteLine(sb.ToString());
         }
 
         private static void Busque(Vertice vertice)

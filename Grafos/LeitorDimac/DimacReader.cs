@@ -8,6 +8,8 @@ namespace Grafos.LeitorDimac
 {
     public class DimacReader
     {
+        private const double FATOR_DENSIDADE = 0.5;
+
         public static IGrafo LerArquivo(string path)
         {
             var vertices = new List<Vertice>();
@@ -28,7 +30,7 @@ namespace Grafos.LeitorDimac
 
             var densidade = CalcularDensidade(vertices.Count, arestas.Count);
 
-            if (densidade < 0.5)
+            if (densidade < FATOR_DENSIDADE)
             {
                 return new GrafoListaAdjacencia().InicializarGrafo(vertices, arestas);
             }
@@ -71,12 +73,12 @@ namespace Grafos.LeitorDimac
             var verticesDaAresta = vertices.Where(v => v.Id == origem || v.Id == destino).ToList();
 
             if (verticesDaAresta.Count != 2)
-                throw new InvalidOperationException("Erro ao encontrar vértices da aresta."); //Passou um vértice que não existe jumento
+                throw new InvalidOperationException("Erro ao encontrar vértices da aresta.");
 
             var aresta = arestas.FirstOrDefault(a => a.Origem == null && a.Destino == null);
 
             if (aresta == null)
-                throw new InvalidOperationException("Erro ao encontrar aresta."); //Por acaso, passou mais arestas do que o esperado?
+                throw new InvalidOperationException("Erro ao encontrar aresta.");
 
             aresta.Origem = verticesDaAresta.FirstOrDefault(v => v.Id == origem);
             aresta.Destino = verticesDaAresta.FirstOrDefault(v => v.Id == destino);

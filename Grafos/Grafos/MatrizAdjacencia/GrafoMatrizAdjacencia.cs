@@ -263,7 +263,7 @@ namespace Grafos.Classes.MatrizAdjacencia
 
         public void TrocarVertices(int idV1, int idV2)
         {
-            //Adicionar verficações: Id igual
+            //TODO: Adicionar verificações: Id igual
             //Fazer esse trem
             var arestasV1 = ObterArestasAdjacentes(idV1);
             var arestasV2 = ObterArestasAdjacentes(idV2);

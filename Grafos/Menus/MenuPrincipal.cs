@@ -41,6 +41,7 @@ namespace Grafos.Menus
                 {
                     Console.WriteLine("\nPressione qualquer tecla para continuar...");
                     Console.ReadKey();
+                    Console.Clear();
                 }
 
             } while (opcao != 0);

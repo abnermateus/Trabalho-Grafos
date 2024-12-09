@@ -9,6 +9,7 @@ namespace Grafos.Menus
     public class Menu1
     {
         private IGrafo? grafo;
+        private const double FATOR_DENSIDADE = 0.5;
 
         public void ExecutarMenu()
         {
@@ -45,6 +46,7 @@ namespace Grafos.Menus
                 {
                     Console.WriteLine("\nPressione qualquer tecla para continuar...");
                     Console.ReadKey();
+                    Console.Clear();
                 }
 
             } while (opcao != 0);
@@ -61,6 +63,11 @@ namespace Grafos.Menus
 
                 Console.Write("Digite a quantidade de arestas: ");
                 int numArestas = int.Parse(Console.ReadLine() ?? "0");
+
+                if (numVertices < 1)
+                {
+                    throw new ArgumentException("Quantidade de vértices deve ser maior que 0!");
+                }
 
                 double densidade = CalcularDensidade(numVertices, numArestas);
                 Console.WriteLine($"\nDensidade do grafo: {densidade:F2}");
@@ -82,7 +89,7 @@ namespace Grafos.Menus
 
         private void ObterRepresentacaoPorDensidade(double densidade)
         {
-            if (densidade > 0.5)
+            if (densidade > FATOR_DENSIDADE)
             {
                 Console.WriteLine("Usando Matriz de Adjacência (densidade > 0,5)");
                 grafo = new GrafoMatrizAdjacencia();
