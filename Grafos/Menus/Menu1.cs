@@ -9,6 +9,7 @@ namespace Grafos.Menus
     public class Menu1
     {
         private IGrafo? grafo;
+        private const double FATOR_DENSIDADE = 0.5;
 
         public void ExecutarMenu()
         {
@@ -88,7 +89,7 @@ namespace Grafos.Menus
 
         private void ObterRepresentacaoPorDensidade(double densidade)
         {
-            if (densidade > 0.5)
+            if (densidade > FATOR_DENSIDADE)
             {
                 Console.WriteLine("Usando Matriz de Adjacência (densidade > 0,5)");
                 grafo = new GrafoMatrizAdjacencia();

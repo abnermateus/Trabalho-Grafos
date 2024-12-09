@@ -72,7 +72,7 @@ namespace Grafos.Classes.MatrizAdjacencia
                 sb.Append($"{i,2}|");
                 for (int j = 1; j <= numVertices; j++)
                 {
-                    string valor = distancias[i, j] == int.MaxValue ? "∞" : distancias[i, j].ToString();
+                    string valor = distancias[i, j] == int.MaxValue / 200 ? "∞" : distancias[i, j].ToString();
                     sb.Append($"{valor,3}");
                 }
                 sb.AppendLine();

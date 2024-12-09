@@ -9,6 +9,8 @@ namespace Grafos.LeitorDimac
     {
         private static int Nivel = 0;
         private static int Limite = 0;
+        private const double FATOR_DENSIDADE = 0.5;
+
 
         public static (IGrafo, int) LerArquivo(string path)
         {
@@ -42,7 +44,7 @@ namespace Grafos.LeitorDimac
 
             var densidade = CalcularDensidade(vertices.Count, arestas.Count);
 
-            if (densidade < 0.5)
+            if (densidade < FATOR_DENSIDADE)
             {
                 return (new GrafoMatrizAdjacencia().InicializarGrafo(vertices, arestas), Nivel); //Colocar a lista de adjacência aqui!!!
             }

@@ -56,12 +56,15 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <exception cref="ArgumentException">Se o vértice não for encontrado.</exception>
         public Vertice ObterVertice(int id)
         {
-            var vertice = Vertices[id].FirstOrDefault();
+            if (id <= 0 || id >= Vertices.Length)
+                throw new ArgumentException($"Vértice {id} está fora dos limites permitidos.");
 
-            if (vertice == null)
-                throw new ArgumentException($"Vértice com ID {id} não encontrado.");
+            var vertices = Vertices.SelectMany(lista => lista).Where(v => v.Id == id).ToList();
 
-            return vertice;
+            if (vertices == null)
+                throw new ArgumentException($"Vértice {id} não encontrado.");
+
+            return vertices.FirstOrDefault();
         }
 
         /// <summary>

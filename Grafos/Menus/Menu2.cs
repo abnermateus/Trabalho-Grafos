@@ -1,5 +1,6 @@
 using Grafos.Algoritmos;
 using Grafos.Classes.ListaAdjacencia;
+using Grafos.Classes.MatrizAdjacencia;
 using Grafos.Interfaces;
 using Grafos.LeitorDimac;
 
@@ -8,9 +9,9 @@ namespace Grafos.Menus
     public class Menu2
     {
         private IGrafo? grafo;
-        private const string SOLICITA_VERTICE = "\nVértice ";
-        private const string SOLICITA_ORIGEM = "\nVértice de origem ";
-        private const string SOLICITA_DESTINO = "\nVértice de destino ";
+        private const string SOLICITA_VERTICE = "Vértice ";
+        private const string SOLICITA_ORIGEM = "Vértice de origem ";
+        private const string SOLICITA_DESTINO = "Vértice de destino ";
 
         public void ExecutarMenu()
         {
@@ -63,10 +64,12 @@ namespace Grafos.Menus
             Console.Write("\nDigite o caminho do arquivo: ");
             var caminho = Console.ReadLine();
 
+            grafo = null;
+
             try
             {
                 grafo = DimacReader.LerArquivo(caminho);
-                Console.WriteLine("\nGrafo criado com sucesso!");
+                Console.WriteLine("\nGrafo obtido com sucesso!");
                 RepresentarGrafo();
             }
             catch (Exception ex)
@@ -255,7 +258,7 @@ namespace Grafos.Menus
 
                     foreach (var aresta in arestasIncidentes)
                     {
-                        Console.WriteLine($"({aresta.Origem.Id}, {aresta.Destino.Id}) ");
+                        Console.Write($"({aresta.Origem.Id}, {aresta.Destino.Id}) ");
                     }
                     Console.WriteLine();
                 }
@@ -273,12 +276,16 @@ namespace Grafos.Menus
             try
             {
                 SolicitarAresta(out int origem, out int destino);
-                var verticesIncidentes = grafo?.ObterVerticesIncidentes(origem, destino);
-                Console.WriteLine($"Vértices incidentes à aresta ({origem}, {destino}): {verticesIncidentes.ToString}");
+                var (verticeOrigem, verticeDestino) = grafo?.ObterVerticesIncidentes(origem, destino) ?? (0, 0);
+
+                if (verticeOrigem != 0 && verticeDestino != 0)
+                {
+                    Console.WriteLine($"Vértices incidentes à aresta ({origem}, {destino}): ({verticeOrigem}, {verticeDestino})");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Erro: {ex.Message}");
             }
         }
 
@@ -362,7 +369,9 @@ namespace Grafos.Menus
             try
             {
                 SolicitarVertice(out int origem);
-                grafo?.ExecutarBuscaEmProfundidade(origem);
+
+                var temCiclo = grafo?.ExecutarBuscaEmProfundidade(origem);
+                grafo.GerarTabelaBuscaEmProfundidade();
             }
             catch (Exception ex)
             {
@@ -387,8 +396,18 @@ namespace Grafos.Menus
 
         private void FloydWarshall()
         {
-
-
+            try
+            {
+                if (!EhListaAdjacencia())
+                {
+                    var floydWarshall = ((GrafoMatrizAdjacencia)grafo)?.ExecutarFloydWarshall();
+                    ((GrafoMatrizAdjacencia)grafo).GerarTabelaDistancias(floydWarshall);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void RepresentarGrafo()
