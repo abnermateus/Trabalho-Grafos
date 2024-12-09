@@ -11,7 +11,6 @@
             resposta.GerarTabelaBuscaEmLargura();
         }
 
-
         public static (GrafoMatrizAdjacencia, int) LeitorDesafio()
         {
             string[] primeiraLinha = Console.ReadLine().Split(' ');
@@ -203,8 +202,8 @@
             if (verticesFiltrados.Count == 0)
                 return;
 
-
             Console.WriteLine(verticesFiltrados.Count);
+
             foreach (var vertice in verticesFiltrados)
             {
                 Console.WriteLine(vertice.Nome);

@@ -362,7 +362,6 @@ namespace Grafos.Menus
             try
             {
                 SolicitarVertice(out int origem);
-
                 grafo?.ExecutarBuscaEmProfundidade(origem);
             }
             catch (Exception ex)
