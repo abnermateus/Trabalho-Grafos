@@ -87,7 +87,7 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>Lista com todos os vértices.</returns>
         public List<Vertice> ObterTodosVertices()
         {
-            return Vertices.SelectMany(v => v).ToList();
+            return Vertices.Where(v => v != null).Select(v => v.FirstOrDefault()).ToList();
         }
 
         /// <summary>
@@ -238,6 +238,7 @@ namespace Grafos.Classes.ListaAdjacencia
             aresta.Peso = novoPeso;
         }
 
+        //TODO: Refatorar
         public void TrocarVertices(int idV1, int idV2)
         {
             var vertice1 = ObterVertice(idV1);
@@ -290,7 +291,8 @@ namespace Grafos.Classes.ListaAdjacencia
                 {
                     if (Vertices[i] != null && Vertices[i].Any(v => v.Id == j))
                     {
-                        Console.Write(j + " -> ");
+                        var peso = ObterAresta(i, j).Peso;
+                        Console.Write($"(v{j}, peso: {peso}) -> ");
                     }
                 }
                 Console.OutputEncoding = System.Text.Encoding.UTF8;

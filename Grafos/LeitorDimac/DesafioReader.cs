@@ -22,19 +22,14 @@ namespace Grafos.LeitorDimac
 
             DefinirLimiteNivel(linhas[0]);
 
-            //Pegar cada nomes
             for (int i = 1; i < linhas.Length; i++)
                 MarcarNomes(nomes, linhas[i]);
 
-            //Preencher os vértices
             foreach (var nome in nomes)
                 vertices.Add(new Vertice(nome));
 
-            //Preencher as arestas
             for (int i = 1; i <= Limite; i++)
                 PreencherArestas(vertices, arestas, linhas[i]);
-
-            #region Verificações
 
             if (arestas.Count == 0)
                 throw new InvalidOperationException("Não há arestas no grafo");
@@ -44,8 +39,6 @@ namespace Grafos.LeitorDimac
 
             if (arestas.Count > Limite)
                 throw new InvalidOperationException("O grafo possui arestas demais");
-
-            #endregion
 
             var densidade = CalcularDensidade(vertices.Count, arestas.Count);
 
