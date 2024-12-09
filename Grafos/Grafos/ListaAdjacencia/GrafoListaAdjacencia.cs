@@ -84,7 +84,7 @@ namespace Grafos.Classes.ListaAdjacencia
         /// <returns>Lista com todos os vértices.</returns>
         public List<Vertice> ObterTodosVertices()
         {
-            return null;
+            return Vertices.Where(v => v != null).Select(v => v.FirstOrDefault()).ToList();
         }
 
         /// <summary>
