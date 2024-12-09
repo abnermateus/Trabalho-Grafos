@@ -6,7 +6,7 @@ namespace Grafos.Classes.MatrizAdjacencia
     public partial class GrafoMatrizAdjacencia : IGrafo, IMatrizAdjacencia
     {
         #region Propriedades
-        public Aresta[,] MatrizDeAdjacencia { get; set; }
+        public Aresta?[,] MatrizDeAdjacencia { get; set; }
         public List<Vertice> Vertices { get; set; }
         #endregion
 
@@ -265,12 +265,30 @@ namespace Grafos.Classes.MatrizAdjacencia
         {
             //Adicionar verficações: Id igual
             //Fazer esse trem
-            var arestasV1 = ObterArestasIncidentes(idV1);
-            var arestasV2 = ObterArestasIncidentes(idV2);
+            var arestasV1 = ObterArestasAdjacentes(idV1);
+            var arestasV2 = ObterArestasAdjacentes(idV2);
+
+            var vertice1 = ObterVertice(idV1);
+            var vertice2 = ObterVertice(idV2);
 
             for (int i = 1; i <= Vertices.Count; i++)
             {
+                MatrizDeAdjacencia[idV1, i] = null;
+                MatrizDeAdjacencia[idV2, i] = null;
+            }
 
+            foreach (var aresta in arestasV1)
+            {
+                aresta.Origem = vertice2;
+
+                MatrizDeAdjacencia[idV2, aresta.Destino.Id] = aresta;
+            }
+
+            foreach (var aresta in arestasV2)
+            {
+                aresta.Origem = vertice1;
+
+                MatrizDeAdjacencia[idV1, aresta.Destino.Id] = aresta;
             }
         }
         #endregion 
